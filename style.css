@@ -75,10 +75,12 @@ body {
   color: #fff;
   margin-bottom: 0.5em;
   letter-spacing: 5px;
+  text-shadow: 5px 5px 5px #000000;
 }
 
 #digital-clock {
   font-size: 14rem;
+  text-shadow: 12px 24px 20px #000000;
   font-weight: 1000;
   letter-spacing: 4px;
   color: #fff;
@@ -100,6 +102,7 @@ body {
   margin-top: 0.5em;
   font-size: 2rem;
   color: #fff;
+  text-shadow: 5px 5px 5px #000000;
 }
 
 #buttons-container, #control-buttons {
@@ -129,6 +132,7 @@ button.red-btn {
   background: #f44336;
   border: 1px solid #d32f2f;
   color: #fff;
+  box-shadow: inset 0px 0px 5px black;
 }
 
 button:hover {
@@ -139,6 +143,8 @@ button#tamuBtn.active {
   background: #f44336;
   border-color: #466d1d;
   color: #fff;
+  box-shadow: inset 0px 0px 5px black;
+  
 }
 
 button#tamuBtn.active::after {
@@ -155,7 +161,7 @@ button#tamuBtn::after {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #ffffff9f;
+  background: #fffffff0;
   padding: 2em;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
