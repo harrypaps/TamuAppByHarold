@@ -6,47 +6,41 @@ const expirationDateEl = document.getElementById('expiration-date');
 const currentDateEl = document.getElementById('current-date');
 let tamuActive = false;
 let alarmAudioContext;
-let alarmOscillator;
-let alarmGainNode;
+let alarmBuffer;
 
 // Initialize the Web Audio API context
 if (window.AudioContext || window.webkitAudioContext) {
     alarmAudioContext = new (window.AudioContext || window.webkitAudioContext)();
 }
 
-// Function to play the alarm sound using Web Audio API
-const playAlarmSound = () => {
-    if (!alarmAudioContext) return;
-
-    // Create an oscillator
-    alarmOscillator = alarmAudioContext.createOscillator();
-    alarmOscillator.type = 'square';
-    alarmOscillator.frequency.setValueAtTime(440, alarmAudioContext.currentTime); // 440 Hz
-
-    // Create a gain node
-    alarmGainNode = alarmAudioContext.createGain();
-    alarmGainNode.gain.setValueAtTime(0.5, alarmAudioContext.currentTime);
-
-    // Connect the oscillator to the gain node and the gain node to the audio context
-    alarmOscillator.connect(alarmGainNode);
-    alarmGainNode.connect(alarmAudioContext.destination);
-
-    // Start the oscillator
-    alarmOscillator.start();
-
-    // Stop the oscillator after 2 seconds
-    setTimeout(() => {
-        alarmOscillator.stop();
-    }, 2000);
+// Load the alarm sound file into a buffer
+const loadAlarmSound = (url) => {
+    fetch(url)
+        .then(response => response.arrayBuffer())
+        .then(arrayBuffer => alarmAudioContext.decodeAudioData(arrayBuffer))
+        .then(audioBuffer => {
+            alarmBuffer = audioBuffer;
+        })
+        .catch(e => console.error(e));
 };
+
+// Play the alarm sound
+const playAlarmSound = () => {
+    if (!alarmAudioContext || !alarmBuffer) return;
+
+    const source = alarmAudioContext.createBufferSource();
+    source.buffer = alarmBuffer;
+    source.connect(alarmAudioContext.destination);
+    source.start();
+};
+
+// Load the alarm sound
+loadAlarmSound('alarm-sound.wav');
 
 // Event listeners
 tamuBtn.addEventListener('click', () => {
     tamuActive = !tamuActive;
     tamuBtn.classList.toggle('active', tamuActive);
-    if (!tamuActive && alarmOscillator) {
-        alarmOscillator.stop();
-    }
 });
 
 days180Btn.addEventListener('click', () => {
@@ -77,33 +71,6 @@ const digitalClockInit = () => {
         checkAlarm(now);
         updateExpirationCountdown();
     }, 500);
-};
-
-infoIcon.addEventListener('click', () => {
-    infoPopup.style.display = 'block';
-});
-
-instructionsIcon.addEventListener('click', () => {
-    instructionsPopup.style.display = 'block';
-});
-
-closeInfoPopup.addEventListener('click', () => {
-    infoPopup.style.display = 'none';
-});
-
-closeInstructionsPopup.addEventListener('click', () => {
-    instructionsPopup.style.display = 'none';
-});
-
-const checkAlarm = (now) => {
-    if (!tamuActive) {
-        return;
-    }
-    const mins = now.getMinutes();
-    const secs = now.getSeconds();
-    if ((mins === 0 || mins === 15 || mins === 30 || mins === 45) && secs === 0) {
-        playAlarmSound();
-    }
 };
 
 const updateCurrentDate = (now) => {
@@ -137,6 +104,29 @@ const updateExpirationCountdown = () => {
     expirationDateEl.innerHTML = `Expiration Date: ${expDay}${expMonth}${expYear} ${expHour}${expMinute}`;
 };
 
+const checkAlarm = (now) => {
+    if (!tamuActive) {
+        return;
+    }
+    const mins = now.getMinutes();
+    const secs = now.getSeconds();
+    if ((mins === 0 || mins === 15 || mins === 30 || mins === 45) && secs === 0) {
+        navigator.serviceWorker.ready.then(registration => {
+            registration.active.postMessage('play-alarm');
+        });
+    }
+};
+
 window.onload = () => {
     digitalClockInit();
 };
+
+// Register the service worker
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+        .then(registration => {
+            console.log('Service Worker registered with scope:', registration.scope);
+        }).catch(error => {
+            console.log('Service Worker registration failed:', error);
+        });
+}
