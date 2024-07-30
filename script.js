@@ -37,6 +37,23 @@ const playAlarmSound = () => {
 // Load the alarm sound
 loadAlarmSound('alarm-sound.wav');
 
+// icons
+infoIcon.addEventListener('click', () => {
+    infoPopup.style.display = 'block';
+});
+
+instructionsIcon.addEventListener('click', () => {
+    instructionsPopup.style.display = 'block';
+});
+
+closeInfoPopup.addEventListener('click', () => {
+    infoPopup.style.display = 'none';
+});
+
+closeInstructionsPopup.addEventListener('click', () => {
+    instructionsPopup.style.display = 'none';
+});
+
 // Event listeners
 tamuBtn.addEventListener('click', () => {
     tamuActive = !tamuActive;
