@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAMU Alarm Clock by HAROLD</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+<body>
+    <div class="container">
+        <span class="material-symbols-outlined info-icon" id="infoIcon">info</span>
+        <span class="material-symbols-outlined instructions-icon" id="instructionsIcon">help</span>
+        <h1 id="page-title">TAMU Alarm Clock</h1>
+        <hr id="title_hr">
+        <div id="clock-wrapper">
+            <div id="current-date"></div>
+            <div id="digital-clock" class="orbitron-clock"></div>
+            <div id="expiration-date"></div>
+        </div>
+        <div id="buttons-container">
+            <button id="days180Btn" class="green-btn">180 Days</button>
+            <button id="days210Btn" class="green-btn">210 Days</button>
+        </div>
+        <div id="control-buttons">
+            <button id="tamuBtn" class="green-btn"></button>
+        </div>
+    </div>
+    <div id="infoPopup" class="popup">
+        <div class="popup-content">
+            <span class="material-symbols-outlined close-btn" id="closeInfoPopup">close</span>
+            <h2>About This Web App</h2>
+            <p>This web app, developed by Harold Trinidad, assists equipment owners and machine operators with quality checking reminders. It eliminates the need to manually set a timer or alarm every 15 minutes, which can sometimes be forgotten, resulting in missed quality checks.</p>
+        </div>
+    </div>
+    <div id="instructionsPopup" class="popup">
+        <div class="popup-content">
+            <span class="material-symbols-outlined close-btn" id="closeInstructionsPopup">close</span>
+            <h2>Instructions</h2>
+            <p>Click the TAMU button to turn on the alarm every 15 minutes. The button will turn red and display "TAMU is ON." When the alarm is ringing, click the TAMU button to turn it off, then turn it on again to reactivate the TAMU. The 180 Days and 210 Days buttons will show the expiration date on the noodle pouch based on the selected days.</p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

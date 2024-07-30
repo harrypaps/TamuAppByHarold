@@ -1,0 +1,191 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Poppins:wght@600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+}
+
+::selection {
+  color: #fff;
+  background: #4db2ec;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(to right, #F9A602, #FC6600);
+  padding: 1em;
+}
+
+.container {
+  width: 100%;
+  max-width: 1400px;
+  padding: 1em;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 15px;
+  text-align: center;
+  position: relative;
+}
+
+.info-icon, .instructions-icon {
+  position: absolute;
+  font-size: 24px;
+  cursor: pointer;
+  color: #fff;
+}
+
+.info-icon {
+  top: 10px;
+  left: 10px;
+}
+
+.instructions-icon {
+  top: 10px;
+  right: 10px;
+}
+
+#page-title {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+#title_hr {
+  width: 350px;
+  border: 2px solid #ff7600;
+  margin: 0.35em auto;
+}
+
+#clock-wrapper {
+  margin: 1em auto;
+  padding: 0.75em;
+  background: #ff7600;
+  border: 1px solid #ff3c00;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#current-date {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.5em;
+  letter-spacing: 5px;
+}
+
+#digital-clock {
+  font-size: 14rem;
+  font-weight: 1000;
+  letter-spacing: 4px;
+  color: #fff;
+  white-space: nowrap;
+  display: inline-block;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.orbitron-clock {
+  font-family: 'Orbitron', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+}
+
+#expiration-date {
+  margin-top: 0.5em;
+  font-size: 2rem;
+  color: #fff;
+}
+
+#buttons-container, #control-buttons {
+  display: flex;
+  justify-content: center;
+  margin: 1em 0;
+  flex-wrap: wrap;
+}
+
+button {
+  margin: 10px;
+  padding: 1em;
+  font-weight: 600;
+  border-radius: 3rem;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+button.green-btn {
+  background: #3cb043;
+  border: 1px solid #466d1d;
+  color: #fff;
+}
+
+button.red-btn {
+  background: #f44336;
+  border: 1px solid #d32f2f;
+  color: #fff;
+}
+
+button:hover {
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+button#tamuBtn.active {
+  background: #f44336;
+  border-color: #466d1d;
+  color: #fff;
+}
+
+button#tamuBtn.active::after {
+  content: "TAMU is ON";
+}
+
+button#tamuBtn::after {
+  content: "TAMU is OFF";
+}
+
+.popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #ffffff9f;
+  padding: 2em;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+
+.popup-content {
+  position: relative;
+}
+
+.popup-content h2 {
+  margin-bottom: 1em;
+}
+
+.popup-content p {
+  font-size: 1rem;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #000;
+}
+
+@media (max-width: 768px) {
+  #digital-clock {
+    font-size: 6rem;
+    max-width: 100%;
+  }
+}
