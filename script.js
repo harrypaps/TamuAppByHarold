@@ -5,59 +5,17 @@ const digitalClock = document.getElementById('digital-clock');
 const expirationDateEl = document.getElementById('expiration-date');
 const currentDateEl = document.getElementById('current-date');
 let tamuActive = false;
-let alarmAudioContext;
-let alarmBuffer;
+let alarmAudio = new Audio('alarm-sound.wav');
+let alarmTimeout;
 
-// Initialize the Web Audio API context
-if (window.AudioContext || window.webkitAudioContext) {
-    alarmAudioContext = new (window.AudioContext || window.webkitAudioContext)();
-}
+alarmAudio.loop = true;
 
-// Load the alarm sound file into a buffer
-const loadAlarmSound = (url) => {
-    fetch(url)
-        .then(response => response.arrayBuffer())
-        .then(arrayBuffer => alarmAudioContext.decodeAudioData(arrayBuffer))
-        .then(audioBuffer => {
-            alarmBuffer = audioBuffer;
-        })
-        .catch(e => console.error(e));
-};
-
-// Play the alarm sound
-const playAlarmSound = () => {
-    if (!alarmAudioContext || !alarmBuffer) return;
-
-    const source = alarmAudioContext.createBufferSource();
-    source.buffer = alarmBuffer;
-    source.connect(alarmAudioContext.destination);
-    source.start();
-};
-
-// Load the alarm sound
-loadAlarmSound('alarm-sound.wav');
-
-// icons
-infoIcon.addEventListener('click', () => {
-    infoPopup.style.display = 'block';
-});
-
-instructionsIcon.addEventListener('click', () => {
-    instructionsPopup.style.display = 'block';
-});
-
-closeInfoPopup.addEventListener('click', () => {
-    infoPopup.style.display = 'none';
-});
-
-closeInstructionsPopup.addEventListener('click', () => {
-    instructionsPopup.style.display = 'none';
-});
-
-// Event listeners
 tamuBtn.addEventListener('click', () => {
     tamuActive = !tamuActive;
     tamuBtn.classList.toggle('active', tamuActive);
+    if (!tamuActive) {
+        alarmAudio.pause();
+    }
 });
 
 days180Btn.addEventListener('click', () => {
@@ -88,6 +46,33 @@ const digitalClockInit = () => {
         checkAlarm(now);
         updateExpirationCountdown();
     }, 500);
+};
+
+infoIcon.addEventListener('click', () => {
+    infoPopup.style.display = 'block';
+});
+
+instructionsIcon.addEventListener('click', () => {
+    instructionsPopup.style.display = 'block';
+});
+
+closeInfoPopup.addEventListener('click', () => {
+    infoPopup.style.display = 'none';
+});
+
+closeInstructionsPopup.addEventListener('click', () => {
+    instructionsPopup.style.display = 'none';
+});
+
+const checkAlarm = (now) => {
+    if (!tamuActive) {
+        return;
+    }
+    const mins = now.getMinutes();
+    const secs = now.getSeconds();
+    if ((mins === 0 || mins === 15 || mins === 30 || mins === 45) && secs === 0) {
+        alarmAudio.play();
+    }
 };
 
 const updateCurrentDate = (now) => {
@@ -121,29 +106,7 @@ const updateExpirationCountdown = () => {
     expirationDateEl.innerHTML = `Expiration Date: ${expDay}${expMonth}${expYear} ${expHour}${expMinute}`;
 };
 
-const checkAlarm = (now) => {
-    if (!tamuActive) {
-        return;
-    }
-    const mins = now.getMinutes();
-    const secs = now.getSeconds();
-    if ((mins === 0 || mins === 15 || mins === 30 || mins === 45) && secs === 0) {
-        navigator.serviceWorker.ready.then(registration => {
-            registration.active.postMessage('play-alarm');
-        });
-    }
-};
-
 window.onload = () => {
+    document.body.appendChild(alarmAudio);
     digitalClockInit();
 };
-
-// Register the service worker
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js')
-        .then(registration => {
-            console.log('Service Worker registered with scope:', registration.scope);
-        }).catch(error => {
-            console.log('Service Worker registration failed:', error);
-        });
-}
