@@ -5,16 +5,47 @@ const digitalClock = document.getElementById('digital-clock');
 const expirationDateEl = document.getElementById('expiration-date');
 const currentDateEl = document.getElementById('current-date');
 let tamuActive = false;
-let alarmAudio = new Audio('alarm-sound.wav');
-let alarmTimeout;
+let alarmAudioContext;
+let alarmOscillator;
+let alarmGainNode;
 
-alarmAudio.loop = true;
+// Initialize the Web Audio API context
+if (window.AudioContext || window.webkitAudioContext) {
+    alarmAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+}
 
+// Function to play the alarm sound using Web Audio API
+const playAlarmSound = () => {
+    if (!alarmAudioContext) return;
+
+    // Create an oscillator
+    alarmOscillator = alarmAudioContext.createOscillator();
+    alarmOscillator.type = 'square';
+    alarmOscillator.frequency.setValueAtTime(440, alarmAudioContext.currentTime); // 440 Hz
+
+    // Create a gain node
+    alarmGainNode = alarmAudioContext.createGain();
+    alarmGainNode.gain.setValueAtTime(0.5, alarmAudioContext.currentTime);
+
+    // Connect the oscillator to the gain node and the gain node to the audio context
+    alarmOscillator.connect(alarmGainNode);
+    alarmGainNode.connect(alarmAudioContext.destination);
+
+    // Start the oscillator
+    alarmOscillator.start();
+
+    // Stop the oscillator after 2 seconds
+    setTimeout(() => {
+        alarmOscillator.stop();
+    }, 2000);
+};
+
+// Event listeners
 tamuBtn.addEventListener('click', () => {
     tamuActive = !tamuActive;
     tamuBtn.classList.toggle('active', tamuActive);
-    if (!tamuActive) {
-        alarmAudio.pause();
+    if (!tamuActive && alarmOscillator) {
+        alarmOscillator.stop();
     }
 });
 
@@ -71,7 +102,7 @@ const checkAlarm = (now) => {
     const mins = now.getMinutes();
     const secs = now.getSeconds();
     if ((mins === 0 || mins === 15 || mins === 30 || mins === 45) && secs === 0) {
-        alarmAudio.play();
+        playAlarmSound();
     }
 };
 
@@ -107,6 +138,5 @@ const updateExpirationCountdown = () => {
 };
 
 window.onload = () => {
-    document.body.appendChild(alarmAudio);
     digitalClockInit();
 };
