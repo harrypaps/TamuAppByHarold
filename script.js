@@ -70,7 +70,9 @@ const checkAlarm = (now) => {
     }
     const mins = now.getMinutes();
     const secs = now.getSeconds();
-    if ((mins === 0 || mins === 15 || mins === 30 || mins === 45) && secs === 0) {
+   // if ((mins === 0 || mins === 15 || mins === 30 || mins === 45) && secs === 0) {
+   //     alarmAudio.play();
+    if ((mins === 0 || mins === 20 || mins === 40 ) && secs === 0) {
         alarmAudio.play();
     }
 };
